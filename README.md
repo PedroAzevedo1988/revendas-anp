@@ -1,6 +1,6 @@
 # Revendas ANP
 
-Sistema Full Stack para consulta de revendas de GLP (Gás Liquefeito de Petróleo) cadastradas na Agência Nacional do Petróleo (ANP), utilizando dados públicos disponibilizados pela própria agência. :contentReference[oaicite:0]{index=0}
+Sistema Full Stack para consulta de revendas de GLP (Gás Liquefeito de Petróleo) cadastradas na Agência Nacional do Petróleo (ANP), utilizando dados públicos disponibilizados pela própria agência.
 
 ---
 
@@ -55,7 +55,7 @@ Interface Web
 3. O container Python realiza a carga dos dados da ANP.
 4. Os dados são armazenados no SQL Server.
 5. A API PHP disponibiliza os dados em JSON.
-6. O `index.php` consome a API e exibe os dados para o usuário. :contentReference[oaicite:1]{index=1}
+6. O `index.php` consome a API e exibe os dados para o usuário.
 
 ---
 
@@ -81,8 +81,6 @@ revendas-anp/
 └── README.md
 ```
 
-:contentReference[oaicite:2]{index=2}
-
 ---
 
 ## Fonte dos Dados
@@ -96,9 +94,6 @@ https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos
 **Arquivo utilizado:**
 
 - Cadastro de Revendas de GLP
-
-:contentReference[oaicite:3]{index=3}
-
 ---
 
 ## Configuração
@@ -106,18 +101,14 @@ https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos
 ### Arquivo `.env`
 
 ```env
-MSSQL_SA_PASSWORD=SuaSenhaForteAqui
+MSSQL_SA_PASSWORD=RevendasPassword!123
 MSSQL_DATABASE=REVENDAS
 
 DB_HOST=localhost
 DB_PORT=1433
 DB_NAME=REVENDAS
 DB_USER=sa
-DB_PASSWORD=SuaSenhaForteAqui
-```
-
-:contentReference[oaicite:4]{index=4}
-
+DB_PASSWORD=RevendasPassword!123
 ---
 
 ## Executando o Projeto
@@ -142,9 +133,6 @@ docker logs revendas-db-init
 docker logs revendas-carga-anp
 docker logs revendas-php
 ```
-
-:contentReference[oaicite:5]{index=5}
-
 ---
 
 ## Containers
@@ -186,9 +174,6 @@ Servidor web da aplicação.
 
 - Disponibilizar API JSON
 - Servir a interface web
-
-:contentReference[oaicite:6]{index=6}
-
 ---
 
 ## Interface Web
@@ -213,9 +198,6 @@ http://localhost:8080
 - Paginação automática
 - Integração com DataTables
 - Consumo dos dados via AJAX
-
-:contentReference[oaicite:7]{index=7}
-
 ---
 
 ## API
@@ -247,9 +229,6 @@ http://localhost:8080/revendas_anp_selecionar.php
   }
 ]
 ```
-
-:contentReference[oaicite:8]{index=8}
-
 ---
 
 ## Acesso ao Banco
@@ -260,7 +239,7 @@ http://localhost:8080/revendas_anp_selecionar.php
 docker exec -it revendas-mssql /opt/mssql-tools/bin/sqlcmd \
 -S localhost \
 -U sa \
--P SuaSenhaForteAqui \
+-P RevendasPassword!123 \
 -C
 ```
 
@@ -270,9 +249,6 @@ docker exec -it revendas-mssql /opt/mssql-tools/bin/sqlcmd \
 USE REVENDAS;
 GO
 ```
-
-:contentReference[oaicite:9]{index=9}
-
 ---
 
 ## Consultas Úteis
@@ -310,9 +286,6 @@ FROM dbo.tb_revendas_anp
 WHERE UF = 'MG';
 GO
 ```
-
-:contentReference[oaicite:10]{index=10}
-
 ---
 
 ## Atualização dos Dados
@@ -330,28 +303,12 @@ O processo executará novamente:
 2. Criação da tabela
 3. Download do CSV atualizado
 4. Importação dos dados
-
-:contentReference[oaicite:11]{index=11}
-
 ---
 
 ## Melhorias Futuras
 
-- API REST completa
-- Paginação no servidor
-- Busca por CNPJ
-- Busca por Razão Social
-- Busca por Município
-- Busca por UF
 - Dashboard com estatísticas
 - Atualização automática periódica dos dados
 - Cache de consultas
 - Testes automatizados
 
-:contentReference[oaicite:12]{index=12}
-
----
-
-## Licença
-
-Projeto desenvolvido para fins acadêmicos, educacionais e de estudo utilizando dados públicos disponibilizados pela Agência Nacional do Petróleo (ANP). :contentReference[oaicite:13]{index=13}
