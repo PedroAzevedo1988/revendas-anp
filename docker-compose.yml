@@ -1,0 +1,89 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: revendas-mssql
+    restart: unless-stopped
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      MSSQL_PID: Developer
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  db-init:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: revendas-db-init
+
+    depends_on:
+      mssql:
+        condition: service_healthy
+
+    volumes:
+      - ./database:/scripts
+
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - >
+        /opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P "$$MSSQL_SA_PASSWORD" -C
+        -i /scripts/tb_revendas_anp.sql &&
+        echo "Banco inicializado com sucesso."
+    restart: "no"
+
+  carga-anp:
+    build:
+      context: ./python
+
+    container_name: revendas-carga-anp
+
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+    environment:
+      RUNNING_IN_DOCKER: "true"
+      DB_HOST: mssql
+      DB_PORT: 1433
+      DB_NAME: REVENDAS
+      DB_USER: sa
+      DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+    restart: "no"
+
+  php:
+    build: .
+    container_name: revendas-php
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./php:/var/www/html
+
+    environment:
+      DB_HOST: mssql
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      MSSQL_DATABASE: ${MSSQL_DATABASE}
+
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      carga-anp:
+        condition: service_completed_successfully
+
+volumes:
+  mssql_data:

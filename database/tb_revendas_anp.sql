@@ -1,0 +1,34 @@
+IF DB_ID(N'REVENDAS') IS NULL
+    CREATE DATABASE REVENDAS;
+GO
+
+USE REVENDAS;
+GO
+
+IF OBJECT_ID(N'dbo.tb_revendas_anp', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.tb_revendas_anp (
+        id              BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        CODIGOISIMP     BIGINT NOT NULL,
+        AUTORIZACAO     VARCHAR(50) NOT NULL,
+        DATAPUBLICACAO  DATE NULL,
+        RAZAOSOCIAL     VARCHAR(255) NULL,
+        CNPJ            VARCHAR(14) NULL,
+        ENDERECO        VARCHAR(255) NULL,
+        COMPLEMENTO     VARCHAR(255) NULL,
+        BAIRRO          VARCHAR(100) NULL,
+        CEP             VARCHAR(8) NULL,
+        UF              CHAR(2) NULL,
+        MUNICIPIO       VARCHAR(100) NULL,
+        DISTRIBUIDORA   VARCHAR(255) NULL,
+        DATAVINCULACAO  DATE NULL,
+        CLASSE          VARCHAR(255) NULL
+    );
+
+    CREATE INDEX IX_CODIGOISIMP ON dbo.tb_revendas_anp (CODIGOISIMP);
+    CREATE INDEX IX_DATAVINCULACAO ON dbo.tb_revendas_anp (DATAVINCULACAO);
+    CREATE INDEX IX_CNPJ ON dbo.tb_revendas_anp (CNPJ);
+    CREATE INDEX IX_AUTORIZACAO ON dbo.tb_revendas_anp (AUTORIZACAO);
+    CREATE INDEX IX_UF_MUNICIPIO ON dbo.tb_revendas_anp (UF, MUNICIPIO);
+END
+GO
