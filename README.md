@@ -236,7 +236,7 @@ http://localhost:8080/revendas_anp_selecionar.php
 ### Entrar no SQL Server
 
 ```bash
-docker exec -it revendas-mssql /opt/mssql-tools/bin/sqlcmd \ -S localhost \ -U sa \ -P RevendasPassword!123 \ -C
+docker exec -it revendas-mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "RevendasPassword!123" -C
 ```
 
 ### Selecionar banco
